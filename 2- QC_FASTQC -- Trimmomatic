@@ -1,0 +1,11 @@
+# FastQC can read files in many formats such as sam, bam,  FastQ.
+$ cd ~/chipseq/raw_data
+$ ls -l
+$ fastqc *.fastq
+$ mv *fastqc* /results/fastqc/
+
+
+
+# Trimmomatic
+$ls
+trimmomatic PE srr957824_1.fastq srr957824_2.fastq srr957824_1_paired.fq.gz srr957824_1_unpaired.fq.gz srr957824_2_paired.fq.gz srr957824_2_unpaired.fq.gz LEADING:15 TRAILING:15 SLIDINGWINDOW:4:20 MINLEN:100
