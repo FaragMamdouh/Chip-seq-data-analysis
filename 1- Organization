@@ -1,0 +1,8 @@
+# Create directories
+$ mkdir chipseq
+$ cd chipseq
+$ mkdir raw_data reference_data scripts logs meta
+$ mkdir -p results/bowtiew results/fastqc
+$ tree
+
+
