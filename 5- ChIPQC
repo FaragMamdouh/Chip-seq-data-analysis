@@ -1,0 +1,24 @@
+library("BiocManager")
+BiocManager::install("ChIPQC")
+library(ChIPQC)
+
+
+# SampleID: Identifier string for sample
+# Tissue, Factor, Condition: Identifier strings for up to three different factors (You will need to have all columns listed. If you don't have infomation, then set values to NA)
+# Replicate: Replicate number of sample
+# bamReads: file path for BAM file containing aligned reads for ChIP sample
+# ControlID: an identifier string for the control sample
+# bamControl: file path for bam file containing aligned reads for control sample
+# Peaks: path for file containing peaks for sample
+# PeakCaller: Identifier string for peak caller used. Possible values include “raw”, “bed”, “narrow”, “macs”
+samples = read.csv("E:/Chip/samplesheet_chr12.csv")
+## Create ChIPQC object
+chipObj <- ChIPQC(samples, annotation="hg19") 
+## Create ChIPQC report
+ChIPQCreport(chipObj, reportName="ChIP QC report: Nanog and Pou5f1", reportFolder="ChIPQCreport")
+
+# These metrics include read depth, read length, and duplication rate. The read depth and length can be useful to note, especially if there appear to be large differences across samples.
+# There are a few metrics that we usually explore when determining whether we have a strong enrichment of reads in peaks, including RiP, SSD, and RiBL.
+# RiP (Reads in Peaks) should be higher than 5%
+# RiBL (Reads overlapping in Blacklisted Regions): Lower RiBL percentages are better than higher.
+# 
