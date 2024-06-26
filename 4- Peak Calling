@@ -1,0 +1,12 @@
+# Peak Calling
+# Running Macs2 on sorted files
+$ macs2 callpeak -t results/bowtie2/aligned_reads_sorted.bam -c results/bowtie2/aligned_reads_control_sorted.bam --format BAM --name PkCd --gsize 138000000 --pvalue 1e-3
+
+#narrowPeak: is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data.
+# It is a BED 6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:
+# _peaks.narrowPeak: BED6+4 format file which contains the peak locations together with peak summit, pvalue and qvalue
+# _peaks.xls: a tabular file which contains information about called peaks. Additional information includes pileup and fold enrichment
+# _summits.bed: peak summits locations for every peak. To find the motifs at the binding sites, this file is recommended
+# _model.R: an R script which you can use to produce a PDF image about the model based on your data and cross-correlation plot
+# _control_lambda.bdg: bedGraph format for input sample
+# _treat_pileup.bdg: bedGraph format for treatment sample
