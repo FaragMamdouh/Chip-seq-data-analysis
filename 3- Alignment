@@ -1,0 +1,15 @@
+$ cd chipseq/reference_data/
+$ bowtie2-build reference_genome.fasta reference_genome
+
+$ cd ~/chipseq/results/bowtie2
+$ ls
+
+# The output is (Sequence Alignment Map) SAM file. It contains information for each individual read and its alignment to the genome. 
+$ bowtie2 -k 1 -x chipseq/reference_data/reference_genome srr957824_1_paired.fq.gz -2 srr957824_2_paired.fq.gz -S aligned_reads.sam
+$ head -n 10 aligned_reads.sam
+
+# sam to bam
+$ samtools view -bso aligned_reads.bam aligned_reads.sam
+
+$ sambamba sort -t 6 -o aligned_reads_sorted.bam aligned_reads.bam
+
