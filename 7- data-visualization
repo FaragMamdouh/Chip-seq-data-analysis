@@ -1,0 +1,87 @@
+$ cd ~/chipseq/results/
+$ mkdir -p visualization/bigWig visualization/figures
+
+for file in ~/chipseq/results/bowtie2/*aln.bam
+do
+samtools index $file
+done
+
+$ bamCoverage -b bowtie2/H1hesc_Nanog_Rep2_aln.bam \
+-o visualization/bigWig/H1hesc_Nanog_Rep2.bw \
+--binSize 20 \
+--normalizeUsing BPM \
+--smoothLength 60 \
+--extendReads 150 \
+--centerReads \
+-p 6 2> ../logs/Nanog_rep2_bamCoverage.log
+
+
+$ bamCoverage -b bowtie2/H1hesc_Pou5f1_Rep1_aln.bam \
+-o visualization/bigWig/H1hesc_Pou5f1_Rep1.bw \
+--binSize 20 \
+--normalizeUsing BPM \
+--smoothLength 60 \
+--extendReads 150 \
+--centerReads \
+-p 6 2> ../logs/Pou5f1_rep1_bamCoverage.log
+
+
+$ computeMatrix reference-point --referencePoint TSS \
+-b 1000 -a 1000 \
+-R ~/chipseq/results/visualization/chr12_genes.bed \
+-S /chip-seq/full-dataset/bigWig/Encode_Nanog*.bw \
+--skipZeros \
+-o ~/chipseq/results/visualization/matrixNanog_TSS_chr12.gz \
+-p 6 \
+--outFileSortedRegions ~/chipseq/results/visualization/regions_TSS_chr12.bed
+
+
+$ computeMatrix reference-point --referencePoint TSS \
+-b 1000 -a 1000 \
+-R ~/chipseq/results/visualization/chr12_genes.bed \
+-S /chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw \
+--skipZeros \
+-p 6 \
+-o ~/chipseq/results/visualization/matrixPou5f1_TSS_chr12.gz \
+--outFileSortedRegions ~/chipseq/results/visualization/regionsPou5f1_TSS_chr12.bed
+
+
+$ computeMatrix reference-point --referencePoint TSS \
+-b 1000 -a 1000 \
+-R ~/chipseq/results/visualization/chr12_genes.bed \
+-S /chip-seq/full-dataset/bigWig/Encode_Pou5f1*.bw \
+--skipZeros \
+-p 6 \
+-o ~/chipseq/results/visualization/matrixPou5f1_TSS_chr12.gz \
+--outFileSortedRegions ~/chipseq/results/visualization/regionsPou5f1_TSS_chr12.bed
+
+
+$ plotProfile -m visualization/matrixNanog_TSS_chr12.gz \
+-out visualization/figures/TSS_Nanog_profile.png \
+--perGroup \
+--colors green purple \
+--plotTitle "" --samplesLabel "Rep1" "Rep2" \
+--refPointLabel "TSS" \
+-T "Nanog read density" \
+-z ""
+$ plotHeatmap -m visualization/matrixNanog_TSS_chr12.gz \
+-out visualization/figures/TSS_Nanog_heatmap.png \
+--colorMap RdBu \
+--whatToShow 'heatmap and colorbar' \
+--zMin -4 --zMax 4  
+$ plotProfile -m visualization/matrixPou5f1_TSS_chr12.gz \
+-out visualization/figures/TSS_Pou5f1_profile.png \
+--perGroup --colors green purple \
+--plotTitle "" --samplesLabel "Rep1" "Rep2" \
+--refPointLabel "TSS" -T "Pou5f1 read density" -z ""
+
+$ plotHeatmap -m visualization/matrixPou5f1_TSS_chr12.gz \
+-out visualization/figures/TSS_Pou5f1_heatmap.png \
+--colorMap RdBu \
+--whatToShow 'heatmap and colorbar' \
+--zMin -2 --zMax 2  
+
+$ plotHeatmap -m visualization/matrixPou5f1_TSS_chr12.gz \
+-out visualization/figures/TSS_Pou5f1_profile-heatmap.png \
+--colorMap RdBu \
+--zMin -2 --zMax 2  
