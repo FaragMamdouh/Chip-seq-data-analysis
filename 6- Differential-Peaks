@@ -1,0 +1,33 @@
+library(DiffBind)
+samples <- read.csv('meta/samplesheet_chr12.csv')
+dbObj <- dba(sampleSheet=samples)
+dbObj
+# Normalization
+dbObj <- dba.count(dbObj, bUseSummarizeOverlaps=TRUE)
+dba.plotPCA(dbObj,  attributes=DBA_FACTOR, label=DBA_ID)
+plot(dbObj)
+dbObj <- dba.contrast(dbObj, categories=DBA_FACTOR, minMembers = 2)
+dbObj <- dba.analyze(dbObj, method=DBA_ALL_METHODS)
+dba.plotVenn(dbObj,contrast=1,method=DBA_ALL_METHODS)
+pvals <- dba.plotBox(dbObj)
+
+res_deseq <- dba.report(dbObj, method=DBA_DESEQ2, contrast = 1, th=1)
+
+# Write to file
+out <- as.data.frame(res_deseq)
+write.table(out, file="results/Nanog_vs_Pou5f1_deseq2.txt", sep="\t", quote=F, row.names=F)
+# Create bed files for each keeping only significant peaks (p < 0.05)
+
+nanog_enrich <- out %>% 
+  filter(FDR < 0.05 & Fold > 0) %>% 
+  select(seqnames, start, end)
+  
+# Write to file
+write.table(nanog_enrich, file="Nanog_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
+
+pou5f1_enrich <- out %>% 
+  filter(FDR < 0.05 & Fold < 0) %>% 
+  select(seqnames, start, end)
+
+# Write to file
+write.table(pou5f1_enrich, file="Pou5f1_enriched.bed", sep="\t", quote=F, row.names=F, col.names=F)
