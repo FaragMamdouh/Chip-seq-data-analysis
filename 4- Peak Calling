@@ -1,6 +1,17 @@
 # Peak Calling
 # Running Macs2 on sorted files
-$ macs2 callpeak -t results/bowtie2/aligned_reads_sorted.bam -c results/bowtie2/aligned_reads_control_sorted.bam --format BAM --name PkCd --gsize 138000000 --pvalue 1e-3
+
+
+$ macs2 callpeak \
+-t results/bowtie2/aligned_reads_sorted.bam \
+-c results/bowtie2/aligned_reads_control_sorted.bam \
+--format BAM \
+--name PkCd \
+--gsize 138000000 \
+--pvalue 1e-3
+
+
+
 
 #narrowPeak: is used by the ENCODE project to provide called peaks of signal enrichment based on pooled, normalized (interpreted) data.
 # It is a BED 6+4 format, which means the first 6 columns of a standard BED file with 4 additional fields:
