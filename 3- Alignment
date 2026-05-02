@@ -9,7 +9,26 @@ $ bowtie2 -k 1 -x chipseq/reference_data/reference_genome srr957824_1_paired.fq.
 $ head -n 10 aligned_reads.sam
 
 # sam to bam
-$ samtools view -bso aligned_reads.bam aligned_reads.sam
+$  samtools view -bS aligned_reads.sam > aligned_reads.bam
 
-$ sambamba sort -t 6 -o aligned_reads_sorted.bam aligned_reads.bam
+ #sorting 
+samtools sort aligned_reads.bam -o aligned_reads.sorted.bam
 
+# basic QC
+samtools flagstat aligned_reads.sorted.bam
+
+
+# More detailed QC metrics
+samtools stats aligned_reads.sorted.bam > stats.txt
+
+
+# Check mapping quality distribution
+samtools view aligned_reads.sorted.bam | awk '{print $5}' | sort | uniq -c
+
+# Coverage QC (very important)
+samtools coverage aligned_reads.sorted.bam
+
+# 
+sambamba view -h -t 2 -f bam \
+-F "[XS] == null and not unmapped  and not duplicate" \
+ aligned_reads.sorted.bam  > aligned_reads.sorted_filtered.bam
