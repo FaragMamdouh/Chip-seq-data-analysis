@@ -3,8 +3,8 @@
 
 
 $ macs2 callpeak \
--t results/bowtie2/aligned_reads_sorted.bam \
--c results/bowtie2/aligned_reads_control_sorted.bam \
+-t nanog_Rep2.sorted.bam \
+-c nanog_Rep1.sorted.bam \
 --format BAM \
 --name PkCd \
 --gsize 138000000 \
